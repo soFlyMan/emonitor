@@ -38,8 +38,9 @@
         
         #messages {
             list-style-type: none;
+            font-size: 24px;
             margin: 0;
-            padding: 0;
+            padding: 40px 120px;
         }
         
         #messages li {
@@ -60,17 +61,38 @@
 </body>
 <script src="/socket.io/socket.io.js"></script>
 <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
+<script src="../node_modules/ws/lib/websocket.js"></script>
 <script>
     $(function() {
-        var socket = io();
-        var msg = {
-            name: 'sofly',
-            isVIP: false,
+        var ws = new WebSocket("ws://localhost:8080");
+
+        ws.onopen = function(e) {
+            console.log('Connection to server opened');
         }
-        socket.emit('privateMessage', msg)
-        socket.on('data', function(data) {
-            console.log('data', data)
-        })
+        ws.onmessage = function(event) {
+            console.log('Client received a message', event);
+            $('#messages').append(`<li style="color: red">${event.data}</li>`)
+        };
+        ws.onclose = function(e) {
+            console.log('connection closed.');
+        }
+        $('form').submit(function(e) {
+            e.preventDefault(); // prevents page reloading
+            $('#messages').append(`<li style="text-align: right">${$('#m').val()}</li>`)
+            sendMessage();
+            $('#m').val('');
+            return false;
+        });
+
+        function sendMessage() {
+            var data = JSON.stringify({
+                type: 'online',
+                from: 'user_id',
+                to: 'server',
+                text: $('#m').val()
+            })
+            ws.send(data);
+        }
     });
 </script>
 

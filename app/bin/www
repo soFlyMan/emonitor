@@ -20,8 +20,16 @@ var port = normalizePort(process.env.PORT || '3000');
  */
 
 var server = http.createServer(app.callback());
-var io = require('socket.io')(server);
-require('../socket/index')(io);
+// var io = require('socket.io')(server);
+// require('../socket/index')(io);
+var WebSocketServer = require('ws').Server,
+    webSocketServer = new WebSocketServer({ port: 8080 });
+var HashMap = require('hashmap');
+
+// record the client
+var userConnectionMap = new HashMap();
+require('../ws/wss')(webSocketServer, userConnectionMap)
+
 /**
  * Listen on provided port, on all network interfaces.
  */
