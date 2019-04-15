@@ -62,7 +62,7 @@
 <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
 <script>
     $(function() {
-        var socket = io.connect('ws://localhost:3000', {});
+        var socket = io();
         var msg = {
             name: 'sofly',
             isVIP: false,

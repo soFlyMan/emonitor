@@ -1,5 +1,6 @@
 module.exports = function(io) {
     io.on('connection', function(socket) {
+        console.log('shituoge lianje le')
         var data = {
             items: [{ a: 1 }, { a: 2 }]
         }
