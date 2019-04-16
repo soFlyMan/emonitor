@@ -62,9 +62,65 @@
 <script src="/socket.io/socket.io.js"></script>
 <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
 <script src="../node_modules/ws/lib/websocket.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.18.0/axios.js"></script>
+<script>
+    const url = 'http://www.912sc.cn/api.ashx?_t=1555248254372'
+    var content = {
+        'method': 'lessPrice',
+        'maxId': '3400209'
+    }
+    const fd = new FormData(content)
+        // fd.append('method', 'lessPrice')
+        // fd.append('maxId', '3400209')
+        // axios({
+        //         url: url,
+        //         method: 'post',
+        //         headers: {
+        //             'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8',
+        //             'Accept': 'application/json, text/javascript, */*; q=0.01',
+        //             'Origin': 'http://www.912sc.cn',
+        //             'Referer': 'http://www.912sc.cn/'
+        //         },
+        //         // params: { _t: 1555248254372 },
+        //         // paramsSerializer: function(params) {
+        //         //     return Qs.stringify(params, { arrayFormat: 'brackets' })
+        //         // },
+        //         data: content
+        //     })
+        //     .then(response => {
+        //         // console.log(response.data);
+        //         console.log(response.status);
+        //         console.log(response.statusText);
+        //         // console.log(response.headers);
+        //         // console.log(response.config);
+        //         console.log(response.data, 'res')
+        //             // ctx.body = response.data
+        //     })
+        //     .catch(error => {
+        //         console.log(error);
+        //     });
+    $.ajax({
+        url: url,
+        type: 'post',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8',
+            'Accept': 'application/json, text/javascript, */*; q=0.01',
+            'Origin': 'http://www.912sc.cn',
+            'Referer': 'http://www.912sc.cn/',
+            'Access-Control-Allow-Origin': '*'
+        },
+        data: content,
+        success: function(data) {
+            console.log(data)
+        }
+
+
+    })
+</script>
 <script>
     $(function() {
-        var ws = new WebSocket("ws://localhost:8080");
+        // var ws = new WebSocket("ws://localhost:8080");
+        var ws = new WebSocket("ws://203.195.155.224:8080/")
 
         ws.onopen = function(e) {
             console.log('Connection to server opened');
@@ -93,6 +149,8 @@
             })
             ws.send(data);
         }
+
+
     });
 </script>
 
