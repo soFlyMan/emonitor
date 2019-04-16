@@ -4,11 +4,20 @@
 
 // // record the client
 // var userConnectionMap = new HashMap();
+var getYSJData = require('./API')
 
 // connection
 module.exports = function(webSocketServer, userConnectionMap) {
     var connectNum = 0;
     webSocketServer.on('connection', function(ws) {
+
+        function wssend(msg) {
+            console.log('待推送商品信息:', msg)
+            ws.send(JSON.stringify(msg))
+        }
+
+        getYSJData(wssend)
+
         ++connectNum;
         console.log('A client has connected. current connect num is : ' + connectNum);
         ws.on('message', function(message) {

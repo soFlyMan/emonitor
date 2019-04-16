@@ -1,0 +1,39 @@
+{
+  "config": {
+    "title": "Emonitor",
+    "description": "My awesome app using docz",
+    "menu": [],
+    "repository": null,
+    "native": false,
+    "codeSandbox": true,
+    "themeConfig": {},
+    "separator": "-"
+  },
+  "entries": [
+    {
+      "key": "index.mdx",
+      "value": {
+        "name": "更新机制",
+        "id": "91149a4106ab27ef746308b41227aca8",
+        "filepath": "index.mdx",
+        "link": "",
+        "slug": "index",
+        "route": "/index",
+        "menu": "",
+        "headings": [
+          {
+            "slug": "emonitor-更新机制",
+            "depth": 1,
+            "value": "EMONITOR 更新机制"
+          },
+          {
+            "slug": "云神价",
+            "depth": 2,
+            "value": "云神价"
+          }
+        ]
+      }
+    }
+  ],
+  "props": []
+}
