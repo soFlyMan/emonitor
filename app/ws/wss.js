@@ -5,18 +5,25 @@
 // // record the client
 // var userConnectionMap = new HashMap();
 var getYSJData = require('./API')
+var update_message = require('./emitter')
+
 
 // connection
 module.exports = function(webSocketServer, userConnectionMap) {
+    //获取同步消息
+    getYSJData()
     var connectNum = 0;
     webSocketServer.on('connection', function(ws) {
 
-        function wssend(msg) {
-            console.log('待推送商品信息:', msg)
+        // function wssend(msg) {
+        //     console.log('待推送商品信息:', msg)
+        //     ws.send(JSON.stringify(msg))
+        // }
+        update_message.on('updated', (msg) => {
             ws.send(JSON.stringify(msg))
-        }
-
-        getYSJData(wssend)
+        })
+        ws.send(JSON.stringify(global.GLOBAL_ITMES))
+            // getYSJData(wssend)
 
         ++connectNum;
         console.log('A client has connected. current connect num is : ' + connectNum);

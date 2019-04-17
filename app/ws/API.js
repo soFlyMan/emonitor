@@ -1,11 +1,12 @@
 const axios = require('axios')
+var update_message = require('./emitter')
 
 var MAXID = 0
 var NMAXID = 3400209
 
 const url = `http://www.912sc.cn/api.ashx?_t=${Date.now()}`
 
-module.exports = function getYSJData(send) {
+module.exports = function getYSJData() {
     //第一次执行，获取maxid
     console.log('获取第一次maxid中...')
     axios({
@@ -40,10 +41,11 @@ module.exports = function getYSJData(send) {
                         console.log('持续获取maxid中...', 'NMAXID:', NMAXID, 'MAXID:', MAXID, 'maxid', response.data.maxid)
                         NMAXID = response.data.maxid
                         if (NMAXID !== MAXID) {
-                            var items = response.data.items
-                                //推送数据
+                            //获取数据
                             console.log('maxid更新，推送商品信息...')
-                            send(items)
+                                // MESSAGE_STRUCT.setMsg(response.data.items)
+                            update_message.emit('updated', response.data.items)
+
                             MAXID = NMAXID
                         }
                     })
