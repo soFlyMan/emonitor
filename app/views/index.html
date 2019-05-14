@@ -54,7 +54,9 @@
 </head>
 
 <body>
-    <ul id="messages"></ul>
+    <ul id="messages">
+        <button id="close">关闭连接</button>
+    </ul>
     <form action="">
         <input id="m" autocomplete="off" /><button>Send</button>
     </form>
@@ -119,10 +121,12 @@
 </script>
 <script>
     $(function() {
-        // var ws = new WebSocket("ws://localhost:8080");
-        var ws = new WebSocket("ws://203.195.155.224:8080/")
+        var ws = new WebSocket("ws://localhost:8080")
+        // var ws = new WebSocket("ws://203.195.155.224:8080/")
 
         ws.onopen = function(e) {
+        let initData = JSON.stringify({ type: 'online', from: 'user_id', category: 'YSJ', params: '', text: $('#m').val() }) 
+        ws.send(initData)
             console.log('Connection to server opened');
         }
         ws.onmessage = function(event) {
@@ -130,7 +134,8 @@
             $('#messages').append(`<li style="color: red">${event.data}</li>`)
         };
         ws.onclose = function(e) {
-            console.log('connection closed.');
+            console.log(e, 'connection closed.');
+            e.message = 'user_id'
         }
         $('form').submit(function(e) {
             e.preventDefault(); // prevents page reloading
@@ -139,12 +144,15 @@
             $('#m').val('');
             return false;
         });
-
+        $('#close').click(function() {
+            ws.close()
+        })
         function sendMessage() {
             var data = JSON.stringify({
-                type: 'online',
-                from: 'user_id',
-                to: 'server',
+                type: 'online', // 在线状态，默认填‘online‘
+                from: 'user_id', // user id也是唯一标识
+                category: 'ZNM', //分类 ''（空字符串表示获取所有的数据）, 'ZNM', 'YSJ', 'SJW' 
+                params: '', //筛选参数 ''（空字符串表示不进行筛选）, 其他参数配合category字段
                 text: $('#m').val()
             })
             ws.send(data);

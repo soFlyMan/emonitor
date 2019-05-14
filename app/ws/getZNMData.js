@@ -1,27 +1,48 @@
 const axios = require('axios')
 var update_message = require('./emitter')
+const { PEROID } = require('./config')
+    //抓取数据间隔
+
 
 var MAXID = 0
 var NMAXID = 3400209
 
-const url = `http://www.912sc.cn/api.ashx?_t=${Date.now()}`
+const url = `http://zainamai.cn/api.ashx?_t=${Date.now()}`
+    // var items = [{
+    //     Id: 3490819,
+    //     Minprice: "185",
+    //     Oldprice: "245",
+    //     SiteId: 7,
+    //     SiteName: "网易考拉",
+    //     SpImg: "https://haitao.nos.netease.com/7a9b93f1511b4ce7bdb06b13db11b82e1544671600295jpm1l6s211960.jpg?imageView&#38;thumbnail=262x262&#38;quality=90",
+    //     SpName: "【祛黄美颜好气色】Salus 莎露斯 Floradix 德国铁元 补铁养血营养液红色版500毫升 2瓶",
+    //     SpUrl: "/UrlRedirect.aspx?proid=3490819",
+    //     Spprice: "185",
+    //     Youhui: "",
+    //     Zhekou: "7.6",
+    //     Ziying: "自营",
+    //     Zkcss: "8",
+    //     time: "19:39"
+    // }]
 
-module.exports = function getYSJData() {
+
+
+module.exports = function getQNMData() {
     //第一次执行，获取maxid
-    console.log('获取第一次maxid中...')
+    console.log('获取<在哪买>第一次maxid中...')
     axios({
             url: url,
             method: 'post',
             headers: {
                 "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8",
                 "Accept": "application/json, text/javascript, */*; q=0.01",
-                "Origin": "http://www.912sc.cn",
-                "Referer": "http://www.912sc.cn/"
+                "Origin": "http://zainamai.cn",
+                "Referer": "http://zainamai.cn/"
             },
             data: `method=lessPrice&maxId=${NMAXID}`
         })
         .then(response => {
-            console.log('获取到第一次maxid')
+            console.log('获取到<在哪买>第一次maxid', response.data.maxid)
             NMAXID = response.data.maxid
             MAXID = response.data.maxid
                 //更新及推送
@@ -32,19 +53,19 @@ module.exports = function getYSJData() {
                         headers: {
                             "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8",
                             "Accept": "application/json, text/javascript, */*; q=0.01",
-                            "Origin": "http://www.912sc.cn",
-                            "Referer": "http://www.912sc.cn/"
+                            "Origin": "http://zainamai.cn",
+                            "Referer": "http://zainamai.cn/"
                         },
                         data: `method=lessPrice&maxId=${NMAXID}`
                     })
                     .then(response => {
-                        console.log('持续获取maxid中...', 'NMAXID:', NMAXID, 'MAXID:', MAXID, 'maxid', response.data.maxid)
+                        console.log('持续获取<在哪买>maxid中...', 'NMAXID:', NMAXID, 'MAXID:', MAXID, 'maxid', response.data.maxid)
                         NMAXID = response.data.maxid
                         if (NMAXID !== MAXID) {
                             //获取数据
-                            console.log('maxid更新，推送商品信息...')
+                            console.log('<在哪买>maxid更新，推送商品信息...', '获取数量: ', response.data.items.length)
                                 // MESSAGE_STRUCT.setMsg(response.data.items)
-                            update_message.emit('updated', response.data.items)
+                            update_message.emit('znm_updated', response.data.items)
 
                             MAXID = NMAXID
                         }
@@ -53,7 +74,7 @@ module.exports = function getYSJData() {
                         console.log(error)
                     })
 
-            }, 12000)
+            }, PEROID)
 
         })
         .catch(error => {
