@@ -1,5 +1,7 @@
 const axios = require('axios')
 var logger = require('../util/logger')('筛选在哪买数据')
+var formatZNMItems = require('./formatItems').formatZNMItems
+
 const {
     PEROID
 } = require('./config')
@@ -74,7 +76,7 @@ module.exports = function getSpecZNMData(from, params, userConnectionMap, target
                             logger.info(from, '<在哪买>maxid更新，推送商品信息...', '获取数量: ', response.data.items.length)
                                 // MESSAGE_STRUCT.setMsg(response.data.items)
                                 // update_message.emit('znm_updated', response.data.items)
-                            targetConnection.send(JSON.stringify(response.data.items))
+                            targetConnection.send(JSON.stringify(formatZNMItems(response.data.items)))
 
                             MAXID = NMAXID
                         }

@@ -1,6 +1,7 @@
 const axios = require('axios')
 const { PEROID } = require('./config')
 var logger = require('../util/logger')('筛选云神价数据')
+var formatYSJItems = require('./formatItems').formatYSJItems
 
 //抓取数据间隔
 
@@ -21,12 +22,14 @@ module.exports = function getSpecYSJData(from, params, userConnectionMap, target
         dsIds: params.dsIds || '',
         catIds: params.catIds || '',
     })
+    logger.debug(cookieObj)
     let cookie = 'UM_distinctid=168278017313ce-094a819237f108-10306653-13c680-16827801732523; JSESSIONID=F39DB5E6173668E6874D98449B0C3253; __session:0.24652409294176292:=http:; CNZZDATA1257173424=1807162650-1546847779-%7C1557895788; Hm_lvt_f0212b5eba144faf4ef1bbf76392d0dd=1555648467,1555648951,1555650028,1557898873; Hm_lpvt_f0212b5eba144faf4ef1bbf76392d0dd=1557898873; remind=false; '
-    cookieObj.map(obj => {
-        if (obj !== '') {
-            cookie = cookie + `${obj}=obj`
+    Object.keys(cookieObj).map(obj => {
+        if (cookieObj[obj] !== '') {
+            cookie = cookie + `${obj}=${cookieObj[obj]}`
         }
     })
+
     logger.info(from, 'cookie: ', cookie)
     logger.info(from, ': 获取<云神价>第一次maxid中...')
     axios({
@@ -73,7 +76,7 @@ module.exports = function getSpecYSJData(from, params, userConnectionMap, target
                                     // MESSAGE_STRUCT.setMsg(response.data.items)
                                     // logger.info(response.data.length)
                                     // update_message.emit('ysj_updated', response.data, NMAXID)
-                                targetConnection.send(JSON.stringify(response.data))
+                                targetConnection.send(JSON.stringify(formatYSJItems(response.data)))
 
                                 MAXID = NMAXID
                             }
