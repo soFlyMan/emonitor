@@ -1,4 +1,5 @@
 const axios = require('axios')
+var logger = require('../util/logger')('在哪买全部数据')
 var update_message = require('./emitter')
 const { PEROID } = require('./config')
     //抓取数据间隔
@@ -29,7 +30,7 @@ const url = `http://zainamai.cn/api.ashx?_t=${Date.now()}`
 
 module.exports = function getQNMData() {
     //第一次执行，获取maxid
-    console.log('获取<在哪买>第一次maxid中...')
+    logger.info('获取<在哪买>第一次maxid中...')
     axios({
             url: url,
             method: 'post',
@@ -42,7 +43,7 @@ module.exports = function getQNMData() {
             data: `method=lessPrice&maxId=${NMAXID}`
         })
         .then(response => {
-            console.log('获取到<在哪买>第一次maxid', response.data.maxid)
+            logger.info('获取到<在哪买>第一次maxid', response.data.maxid)
             NMAXID = response.data.maxid
             MAXID = response.data.maxid
                 //更新及推送
@@ -59,11 +60,11 @@ module.exports = function getQNMData() {
                         data: `method=lessPrice&maxId=${NMAXID}`
                     })
                     .then(response => {
-                        console.log('持续获取<在哪买>maxid中...', 'NMAXID:', NMAXID, 'MAXID:', MAXID, 'maxid', response.data.maxid)
+                        logger.info('持续获取<在哪买>maxid中...', 'NMAXID:', NMAXID, 'MAXID:', MAXID, 'maxid', response.data.maxid)
                         NMAXID = response.data.maxid
                         if (NMAXID !== MAXID) {
                             //获取数据
-                            console.log('<在哪买>maxid更新，推送商品信息...', '获取数量: ', response.data.items.length)
+                            logger.info('<在哪买>maxid更新，推送商品信息...', '获取数量: ', response.data.items.length)
                                 // MESSAGE_STRUCT.setMsg(response.data.items)
                             update_message.emit('znm_updated', response.data.items)
 
@@ -71,14 +72,14 @@ module.exports = function getQNMData() {
                         }
                     })
                     .catch(error => {
-                        console.log(error)
+                        logger.error(error)
                     })
 
             }, PEROID)
 
         })
         .catch(error => {
-            console.log(error)
+            logger.error(error)
         })
 
 }
