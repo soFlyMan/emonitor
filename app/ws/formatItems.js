@@ -78,6 +78,10 @@ function formatYSJUrl(mall, id) {
             return `https://detail.vip.com/detail-${id}.html`
         case '京东':
             return `https://item.jd.com/${id}.html`
+        case '京东自营':
+            return `https://item.jd.com/${id}.html`
+        case '京东三方':
+            return `https://item.jd.com/${id}.html`
         case '天猫超市':
             return `https://chaoshi.detail.tmall.com/item.htm?id=${id}`
         case '天猫商城':

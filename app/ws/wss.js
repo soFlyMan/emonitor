@@ -158,10 +158,10 @@ module.exports = function(webSocketServer, userConnectionMap) {
 
         ws.on('close', function(code) {
             let { from, objMessage } = this
-            logger.info('connection closed.....', this.from, userConnectionMap.get(`${from}_interval`))
+            logger.info('connection closed.....', this.from, userConnectionMap.get(`${from}_ysj_interval`))
                 //清除该连接获取数据的定时器
                 // clearInterval(userConnectionMap.get(`${from}_interval`))
-            clearAllInterval(userConnectionMap, from)
+            clearAllInterval(userConnectionMap, objMessage, from)
             userConnectionMap.remove(from)
         })
     })
