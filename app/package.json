@@ -26,7 +26,7 @@
     "koa-views": "^5.2.1",
     "log4js": "^4.2.0",
     "node-fetch": "^2.3.0",
-    "qs": "^6.7.0",
+    "qs": "^6.7.3",
     "request": "^2.88.0",
     "socket.io": "^2.2.0",
     "superagent": "^5.0.2",
